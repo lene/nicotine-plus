@@ -17,6 +17,7 @@ nicotine = "pynicotine.nicotine:run"
 
 [tool.poetry.dependencies]
 python = "^3.6"
+# NOTE: GeoIP instsallation on darwin skipped due to lack of GeoIP.dat database in brew
 geoip = {version = "^1.3.2", markers = "sys_platform != 'darwin'"}
 miniupnpc = "^2.0.2"
 mutagen = "^1.44.0"

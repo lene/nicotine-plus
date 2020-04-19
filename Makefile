@@ -11,7 +11,7 @@ prepare-deb:
 prepare-macos:
 	# NOTE: Only latest python version is supported due to the way brew installs pygobject
 	poetry env use 3.8.2
-	brew install coreutils gtk+3 pygobject3 gobject-introspection libGeoIP miniupnpc
+	brew install gtk+3 pygobject3 gobject-introspection libGeoIP miniupnpc
 
 install:
 	poetry run pip install -U pip
