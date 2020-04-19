@@ -1,0 +1,31 @@
+version: '3.4'
+
+x-nicotine: &x-nicotine
+  container_name: nicotine
+  network_mode: host
+  environment:
+    - HOME
+    - DISPLAY=:0
+    - WAYLAND_DISPLAY
+    - XDG_RUNTIME_DIR=/tmp
+    - GDK_BACKEND
+  volumes:
+  - $HOME/.Xauthority:/$HOME/.Xauthority:rw
+  - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY
+  user: $UID:$GID
+  command: nicotine
+
+services:
+  nicotine:
+    <<: *x-nicotine
+    build:
+      context: .
+      args:
+        DEV: 0
+
+  nicotine-dev:
+    <<: *x-nicotine
+    build:
+      context: .
+      args:
+        DEV: 1
