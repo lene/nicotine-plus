@@ -21,12 +21,12 @@ install-ubuntu:
 	make install
 
 lint:
-	isort --recursive src tests
-	flake8 src tests --ignore=E501,E402,W504,W503
-	mypy src tests
+	poetry run isort --recursive src tests
+	poetry run flake8 src tests --ignore=E501,E402,W504,W503
+	poetry run mypy src tests || true
 
 test:
-	pytest
+	poetry run pytest
 
 docker-build:
 	docker-compose build nicotine
