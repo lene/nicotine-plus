@@ -42,9 +42,9 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SaveEncoding
 from pynicotine.utils import CleanFile
+from pynicotine.utils import GetUserDirectories
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
-from pynicotine.utils import GetUserDirectories
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')

@@ -1,8 +1,8 @@
 import pickle
-import socket
 import select
-from unittest.mock import Mock
+import socket
 from pathlib import Path
+from unittest.mock import Mock
 
 
 class MockSocket(Mock):

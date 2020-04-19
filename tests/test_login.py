@@ -2,14 +2,19 @@ __author__ = 'Lene Preuss <lene.preuss@gmail.com>'
 
 from queue import Queue
 from time import sleep
-from unittest.mock import Mock, MagicMock
+from unittest.mock import MagicMock
+from unittest.mock import Mock
 
 import pytest
 
+from pynicotine.slskmessages import Login
+from pynicotine.slskmessages import ServerConn
+from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskproto import SlskProtoThread
-from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
 from pynicotine.utils import ApplyTranslation
-from tests.mock_socket import monkeypatch_socket, monkeypatch_select
+
+from .mock_socket import monkeypatch_select
+from .mock_socket import monkeypatch_socket
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 0.5
@@ -55,7 +60,7 @@ def test_server_conn(config, monkeypatch) -> None:
 
 
 def test_login(config, monkeypatch) -> None:
-    mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
+    mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)  # noqa: F841
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=Queue(0), bindip='',
