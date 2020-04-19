@@ -1,0 +1,35 @@
+
+[tool.poetry]
+name = "nicotine"
+version = "1.5.0"
+description = "Nicotine+, a client for the SoulSeek filesharing network."
+authors = ["Michael Labouebe <gfarmerfr@free.fr>"]
+license = "GPLv3"
+homepage = "https://www.nicotine-plus.org/"
+packages = [
+    { include = "pynicotine" },
+]
+
+[tool.poetry.scripts]
+nicotine = 'nicotine.py'
+
+[tool.poetry.dependencies]
+python = "^3.6"
+geoip = "^1.3.2"
+miniupnpc = "^2.0.2"
+mutagen = "^1.44.0"
+pgi = "^0.0.11"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.770"
+flake8 = "^3.7.9"
+PyGObject-stubs = "^0.0.2"
+isort = { version = "^4.3.21", extras = ["pyproject"] }
+docutils-stubs = "^0.0.21"
+
+[tool.isort]
+force_single_line = true
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
