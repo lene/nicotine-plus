@@ -17,9 +17,11 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
     - name: Prepare
-      run: pip install poetry
+      run: |
+        pip install poetry
+        sudo make prepare-deb
     - name: Install
-      run: make install-ubuntu
+      run: make install
     - name: Lint
       run: make lint
     - name: Test

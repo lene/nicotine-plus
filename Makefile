@@ -1,9 +1,17 @@
-.PHONY: install lint mypy
+.PHONY: prepare-deb prepare-macos install install-macos lint test docker-build docker-up
 .DEFAULT_GOAL := all
 
 DEV = 1
 
-all: install lint mypy
+all: install lint test
+
+prepare-deb:
+	apt update; apt install -y miniupnpc xdg-utils libgtk-3-0 libcairo2-dev libgirepository1.0-dev libgeoip-dev gobject-introspection gir1.2-gtk-3.0
+
+prepare-macos:
+	# NOTE: Only latest python version is supported due to the way brew installs pygobject
+	poetry env use 3.8.2
+	brew install coreutils gtk+3 pygobject3 gobject-introspection libGeoIP miniupnpc
 
 install:
 	poetry run pip install -U pip
@@ -11,14 +19,7 @@ install:
 	poetry run python install_data.py || sh
 
 install-macos:
-	# NOTE: Only latest python version is supported due to the way brew installs pygobject
-	poetry env use 3.8.2
-	brew install coreutils gtk+3 pygobject3 gobject-introspection libGeoIP miniupnpc
 	PKG_CONFIG_PATH=/usr/local/Cellar/libffi/3.3/lib/pkgconfig make install
-
-install-ubuntu:
-	apt update; apt install -y miniupnpc xdg-utils libgtk-3-0 libcairo2-dev libgirepository1.0-dev libgeoip-dev gobject-introspection gir1.2-gtk-3.0
-	make install
 
 lint:
 	poetry run isort --recursive src tests
