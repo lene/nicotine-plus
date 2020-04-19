@@ -11,9 +11,9 @@ install:
 	poetry run python install_data.py || sh
 
 install-macos:
+	# NOTE: Only latest python version is supported due to the way brew installs pygobject
 	poetry env use 3.8.2
 	brew install coreutils gtk+3 pygobject3 gobject-introspection libGeoIP miniupnpc
-	ln -s /usr/local/bin/ginstall .venv/bin/install
 	PKG_CONFIG_PATH=/usr/local/Cellar/libffi/3.3/lib/pkgconfig make install
 
 install-ubuntu:
