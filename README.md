@@ -2,17 +2,77 @@
 
 [![N|Solid](files/icons/96x96/nicotine-plus.png)](https://github.com/Nicotine-Plus/nicotine-plus/)
 
-## Notes porting to Python 3
-
-* sudo apt install libcairo2-dev libgirepository1.0-dev
-* pip install pygobject
-* pip install mutagen
-
-## Intro
-
-A graphical client for the SoulSeek peer-to-peer system.
+> :warning: Python 3 port is at early alpha stage. Don't expect things to work flawlessly.
 
 Nicotine+ is a graphical client for the SoulSeek peer-to-peer system. It is an attempt to keep Nicotine working with the latest libraries, kill bugs, keep current with the SoulSeek protocol, and add some new features that users want and/or need.
+
+# Installation
+
+## Docker
+This method should work with any modern Linux distribution in both Xorg and Wayland environments. Nicotine will be run with your current user.
+
+```shell script
+$ docker-compose up nicotine
+```
+
+If you want to install dev requirements to resulting image:
+
+```shell script
+$ docker-compose up nicotine-dev
+```
+
+To run Nicotine pre-configured with dummy account add the following lines to `docker-compose.yml`:
+
+```yaml
+volumes:
+- docker/config:$HOME/.config/nicotine/config
+```
+
+You could also mount your home directory as a persistent storage if needed:
+```yaml
+volumes:
+- $HOME/.config/nicotine/config:$HOME/.config/nicotine/config
+```
+
+## Standalone
+
+Prerequesites for local building are the following:
+
+* Python 3.6+
+* poetry package manager installed
+
+To install Poetry for current user run the following commands:
+
+```shell script
+$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+$ export PATH="$HOME/.poetry/bin:$PATH"
+```
+
+Then proceed with instructions for your distribution:
+
+### Debian/Ubuntu or other .deb-based distribution
+```shell script
+$ make prepare-deb
+$ make install
+$ poetry run nicotine
+```
+
+### Arch Linux
+```shell script
+$ make prepare-arch
+$ make install
+$ poetry run nicotine
+```
+
+### macOS
+
+You must have a `brew` package manager installed. Currently macOS build is only possible with Python 3.8 due to the way `brew` installs `pygobject`.
+
+```shell script
+$ make prepare-macos
+$ make install-macos
+$ poetry run nicotine
+```
 
 # License
 
@@ -64,19 +124,3 @@ Nicotine+ uses a versioning scheme similar to what gnome does:
 To run it from git master see: [RUNFROMGIT](doc/RUNFROMGIT.md)
 
 A Debian/Ubuntu repository containing the latest git master-based packages is also available: [GITDEB](doc/GITDEB.md)
-
-# Dependencies
-
-## Required
-
-* [Python 2.7.X](https://www.python.org/)
-* [Gtk+ 2.24.X](http://www.gtk.org/)
-* [PyGTK 2.24.X](http://www.pygtk.org/)
-* [mutagen](https://github.com/quodlibet/mutagen)
-
-## Optional
-
-* [GeoIP python bindings](https://dev.maxmind.com/geoip/legacy/downloadable/) for Country lookup: need an alternative (unmaintained).
-* [python-notify](http://www.galago-project.org) for notification support: need an alternative (unmaintained).
-* [MiniUPnPc python module or binary](https://miniupnp.tuxfamily.org/) for opening ports on your router.
-* [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) for hiding directories from your shares (Windows only).
