@@ -8,6 +8,9 @@ all: install lint test
 prepare-deb:
 	apt update; apt install -y miniupnpc xdg-utils libgtk-3-0 libcairo2-dev libgirepository1.0-dev libgeoip-dev gobject-introspection gir1.2-gtk-3.0
 
+prepare-arch:
+	pacman -Sy --needed gtk3 python-gobject gobject-introspection geoip miniupnpc
+
 prepare-macos:
 	# NOTE: Only latest python version is supported due to the way brew installs pygobject
 	poetry env use 3.8.2
