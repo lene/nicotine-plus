@@ -30,7 +30,7 @@ lint:
 	poetry run mypy src tests || true
 
 test:
-	poetry run pytest
+	poetry run pytest --cov=pynicotine tests/
 
 docker-build:
 	docker-compose build nicotine
