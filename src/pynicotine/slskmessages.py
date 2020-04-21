@@ -357,6 +357,13 @@ class SlskMessage:
         log.addwarning(_("Warning: unknown object type %s") % type(object) + " " + "in message %(type)s" % {'type': self.__class__})
         return b""
 
+    def packObjects(self, *objects) -> bytes:
+        """Helper method to pack each object in sequence and concatenate resulting bytes"""
+        bytes_ = b''
+        for obj in objects:
+            bytes_ += self.packObject(obj)
+        return bytes_
+
     def makeNetworkMessage(self):
         """ Returns binary array, that can be sent over the network"""
         log.addwarning(_("Empty message made, class %s") % (self.__class__,))
@@ -367,6 +374,7 @@ class SlskMessage:
         in an object"""
         log.addwarning(_("Can't parse incoming messages, class %s") % (self.__class__,))
 
+    # FIXME: Unresolved attribute reference
     def doubleParseNetworkMessage(self, message):
         """Calls self._parseNetworkMessage first with a NetworkLongLongType, if that fails with NetworkIntType."""
         messagename = str(self)
@@ -430,7 +438,7 @@ class Login(ServerMessage):
     def makeNetworkMessage(self):
         payload = self.username + self.passwd
         md5hash = hashlib.md5(payload.encode()).hexdigest()
-        message = self.packObject(self.username) + self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(17)
+        message = self.packObjects(self.username, self.passwd, self.version, md5hash, 17)
         return message
 
     def parseNetworkMessage(self, message):
@@ -440,9 +448,8 @@ class Login(ServerMessage):
 
         else:
             pos, self.banner = self.getObject(message, bytes, pos)
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             try:
-                import socket
                 pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
                 # Unknown number
             except Exception as error:
@@ -493,7 +500,6 @@ class GetPeerAddress(ServerMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
-        import socket
         pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
         pos, self.port = self.getObject(message, int, pos, 1)
 
@@ -568,6 +574,7 @@ class GetUserStatus(ServerMessage):
             pass
 
 
+# NOTE: int attribute converted to string
 class SetStatus(ServerMessage):
     """ We send our new status to the server """
     def __init__(self, status=None):
@@ -580,7 +587,7 @@ class SetStatus(ServerMessage):
 class NotifyPrivileges(ServerMessage):
     """ Server tells us something about privileges"""
     def __init__(self, token=None, user=None):
-        self.token = token
+        self.token: Optional[int] = token
         self.user = _str(user)
 
     def parseNetworkMessage(self, message):
@@ -588,7 +595,7 @@ class NotifyPrivileges(ServerMessage):
         pos, self.user = self.getObject(message, bytes, pos)
 
     def makeNetworkMessage(self):
-        return self.packObject(self.token) + self.packObject(self.user)
+        return self.packObjects(self.token, self.user)
 
 
 class AckNotifyPrivileges(ServerMessage):

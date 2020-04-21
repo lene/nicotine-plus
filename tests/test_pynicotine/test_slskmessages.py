@@ -1,11 +1,21 @@
 import unittest
 
+from pynicotine.slskmessages import AddUser
+from pynicotine.slskmessages import ChangePassword
+from pynicotine.slskmessages import GetPeerAddress
+from pynicotine.slskmessages import GetUserStatus
 from pynicotine.slskmessages import JustDecoded
+from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NetworkIntType
 from pynicotine.slskmessages import NetworkLongLongType
 from pynicotine.slskmessages import NetworkSignedIntType
+from pynicotine.slskmessages import NotifyPrivileges
+from pynicotine.slskmessages import RemoveUser
+from pynicotine.slskmessages import SetStatus
+from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SlskMessage
 from pynicotine.slskmessages import ToBeEncoded
+from pynicotine.slskmessages import Unknown6
 
 
 class ToBeEncodedTest(unittest.TestCase):
@@ -78,3 +88,144 @@ class SlskMessageTest(unittest.TestCase):
         self.assertEqual(b'{\x00\x00\x00', net_int_message)
         self.assertEqual(b'{\x00\x00\x00', net_signed_int_message)
         self.assertEqual(b'{\x00\x00\x00\x00\x00\x00\x00', net_long_long_message)
+
+
+class LoginMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = Login(username='test', passwd='s33cr3t', version=157)
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x04\x00\x00\x00test\x07\x00\x00\x00s33cr3t\x9d\x00\x00\x00 \x00\x00\x00d'
+            b'bc93f24d8f3f109deed23c3e2f8b74c\x11\x00\x00\x00',
+            message)
+
+
+class ChangePasswordMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = ChangePassword(password='s33cr3t')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x07\x00\x00\x00s33cr3t',
+            message)
+
+
+class SetWaitPortMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = SetWaitPort(port=1337)
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'9\x05\x00\x00',
+            message)
+
+
+class GetPeerAddressMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = GetPeerAddress(user='test')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x04\x00\x00\x00test',
+            message)
+
+
+class AddUserMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = AddUser(user='test')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x04\x00\x00\x00test',
+            message)
+
+
+class Unknown6MessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = Unknown6(user='test')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x04\x00\x00\x00test',
+            message)
+
+
+class RemoveUserMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = RemoveUser(user='test')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x04\x00\x00\x00test',
+            message)
+
+
+class GetUserStatusMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = GetUserStatus(user='test')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x04\x00\x00\x00test',
+            message)
+
+
+class SetStatusMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = SetStatus(status=1)
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x01\x00\x00\x00',
+            message)
+
+
+class NotifyPrivilegesMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = NotifyPrivileges(token=123456, user='test')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'@\xe2\x01\x00\x04\x00\x00\x00test',
+            message)
