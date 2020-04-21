@@ -26,8 +26,8 @@ import sys
 from gettext import gettext as _
 
 import gi
-from gi.repository import Gtk as gtk
 from gi import __version__ as gobject_version
+from gi.repository import Gtk as gtk
 
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.utils import version
