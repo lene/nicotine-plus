@@ -1,16 +1,26 @@
 import unittest
 
+from pynicotine.slskmessages import AckNotifyPrivileges
 from pynicotine.slskmessages import AddUser
 from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStatus
+from pynicotine.slskmessages import JoinPublicRoom
+from pynicotine.slskmessages import JoinRoom
 from pynicotine.slskmessages import JustDecoded
+from pynicotine.slskmessages import LeavePublicRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NetworkIntType
 from pynicotine.slskmessages import NetworkLongLongType
 from pynicotine.slskmessages import NetworkSignedIntType
 from pynicotine.slskmessages import NotifyPrivileges
+from pynicotine.slskmessages import PrivateRoomAddUser
+from pynicotine.slskmessages import PrivateRoomDismember
+from pynicotine.slskmessages import PrivateRoomDisown
+from pynicotine.slskmessages import PrivateRoomRemoveUser
+from pynicotine.slskmessages import PrivateRoomSomething
 from pynicotine.slskmessages import RemoveUser
+from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SlskMessage
@@ -229,3 +239,172 @@ class NotifyPrivilegesMessageTest(unittest.TestCase):
         self.assertEqual(
             b'@\xe2\x01\x00\x04\x00\x00\x00test',
             message)
+
+
+class AckNotifyPrivilegesMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = AckNotifyPrivileges(token=123456)
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'@\xe2\x01\x00',
+            message)
+
+
+class JoinPublicRoomMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = JoinPublicRoom(unknown=123)
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'{\x00\x00\x00',
+            message)
+
+
+class LeavePublicRoomMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = LeavePublicRoom(unknown=123)
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'{\x00\x00\x00',
+            message)
+
+
+class PublicRoomMessageMessageTest(unittest.TestCase):
+    ...
+
+
+class SayChatroomMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = SayChatroom(room='nicotine', msg='Wassup?')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine\x07\x00\x00\x00Wassup?',
+            message)
+
+
+class JoinRoomMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = JoinRoom(room='nicotine', private=0)
+        obj_private = JoinRoom(room='nicotine', private=1)
+
+        # Act
+        message = obj.makeNetworkMessage()
+        message_private = obj_private.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine\x00\x00\x00\x00',
+            message)
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine\x01\x00\x00\x00',
+            message_private)
+
+
+class PrivateRoomUsersMessageTest(unittest.TestCase):
+    ...
+
+
+class PrivateRoomOwnedMessageTest(unittest.TestCase):
+    ...
+
+
+class PrivateRoomAddUserMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = PrivateRoomAddUser(room='nicotine', user='admin')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin',
+            message)
+
+
+class PrivateRoomDismemberMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = PrivateRoomDismember(room='nicotine')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine',
+            message)
+
+
+class PrivateRoomDisownMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = PrivateRoomDisown(room='nicotine')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine',
+            message)
+
+
+class PrivateRoomSomethingMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = PrivateRoomSomething(room='nicotine')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine',
+            message)
+
+
+class PrivateRoomRemoveUserMessageTest(unittest.TestCase):
+    def test_makeNetworkMessage(self):
+        # Arrange
+        obj = PrivateRoomRemoveUser(room='nicotine', user='admin')
+
+        # Act
+        message = obj.makeNetworkMessage()
+
+        # Assert
+        self.assertEqual(
+            b'\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin',
+            message)
+
+    def test_parseNetworkMessage(self):
+        # Arrange
+        message = b'\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin'
+
+        # Act
+        obj = PrivateRoomRemoveUser()
+        obj.parseNetworkMessage(message)
+
+        # Assert
+        self.assertEqual('nicotine', obj.room)
+        self.assertEqual('admin', obj.user)

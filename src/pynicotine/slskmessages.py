@@ -642,7 +642,7 @@ class SayChatroom(ServerMessage):
         self.msg = _str(msg)
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.msg)
+        return self.packObjects(self.room, self.msg)
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -669,14 +669,14 @@ class JoinRoom(ServerMessage):
     with data on everyone."""
     def __init__(self, room=None, private=None):
         self.room = _str(room)
-        self.private = private
+        self.private: int = private
         self.owner = None
         self.operators = []
 
     def makeNetworkMessage(self):
         if self.private is not None:
-            return self.packObject(self.room) + self.packObject(self.private)
-        return self.packObject(self.room)
+            return self.packObjects(self.room, self.private)
+        return self.packObjects(self.room)
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -684,10 +684,11 @@ class JoinRoom(ServerMessage):
         pos, self.users = self.getUsers(message[pos:])
         pos = pos1 + pos
 
-        if len(message[pos:]) > 0:
+        if message[pos:]:
+            # FIXME: bool or int?
             self.private = True
             pos, self.owner = self.getObject(message, bytes, pos)
-        if len(message[pos:]) > 0 and self.private:
+        if message[pos:] and self.private:
             pos, numops = self.getObject(message, int, pos)
             for i in range(numops):
                 pos, operator = self.getObject(message, bytes, pos)
@@ -762,7 +763,7 @@ class PrivateRoomAddUser(ServerMessage):
         self.user = _str(user)
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.user)
+        return self.packObjects(self.room, self.user)
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
