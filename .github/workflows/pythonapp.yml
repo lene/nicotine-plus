@@ -42,7 +42,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get install devscripts debhelper dh-python python-all \
-          python-gobject-2 python-setuptools quilt python3-pyatspi
+          python-gobject-2 python-setuptools quilt python3-pyatspi python3-pytest
     - name: Build binary .deb
       run: |
         dpkg-buildpackage -b -rfakeroot -us -uc
@@ -97,3 +97,25 @@ jobs:
       run: |
         sudo apt-get install ./nicotine.deb/nicotine_${NICOTINE_VERSION}_all.deb
         nicotine --version | grep ${NICOTINE_VERSION}
+
+  test-install-xenial:
+    runs-on: ubuntu-16.04
+    needs: package
+    steps:
+      - name: Download.deb to ubuntu-16.04
+        uses: actions/download-artifact@v1
+        with:
+          name: nicotine.deb
+      - name: Bring ubuntu-16.04 up to date
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade
+      - name: Install Python 3.6
+        run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install python3.6
+      - name: Test binary .deb installs on ubuntu-16.04
+        run: |
+          sudo apt-get install ./nicotine.deb/nicotine_${NICOTINE_VERSION}_all.deb
+          nicotine --version | grep ${NICOTINE_VERSION}
