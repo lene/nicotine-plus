@@ -73,6 +73,10 @@ jobs:
       with:
         name: nicotine-debuild-artifacts
         path: ../source
+    - name: Run autopkgtest on source .deb artifacts
+      run: |
+        sudo apt-get -y install autopkgtest
+        sudo autopkgtest ../source/nicotine_${NICOTINE_VERSION}_source.changes -- null
 
   test-install:
     runs-on: ${{ matrix.os }}
