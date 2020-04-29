@@ -96,6 +96,7 @@ jobs:
 
   test-install-xenial:
     runs-on: ubuntu-16.04
+    if: false  # disabled for now
     needs: package
     steps:
       - name: Download.deb to ubuntu-16.04
