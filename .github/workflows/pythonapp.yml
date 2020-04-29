@@ -89,10 +89,6 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: nicotine.deb
-    - name: Bring ${{ matrix.os }} up to date
-      run: |
-        sudo apt-get update
-        sudo apt-get upgrade
     - name: Test binary .deb installs on ${{ matrix.os }}
       run: |
         sudo apt-get install ./nicotine.deb/nicotine_${NICOTINE_VERSION}_all.deb
@@ -106,10 +102,10 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: nicotine.deb
-      - name: Bring ubuntu-16.04 up to date
-        run: |
-          sudo apt-get update
-          sudo apt-get upgrade
+#      - name: Bring ubuntu-16.04 up to date
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get upgrade
       - name: Install Python 3.6
         run: |
           sudo add-apt-repository ppa:deadsnakes/ppa
