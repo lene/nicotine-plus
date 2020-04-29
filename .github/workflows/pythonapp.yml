@@ -21,7 +21,7 @@ jobs:
         python-version: ${{ matrix.python }}
     - name: Install dependencies
       run: |
-        sudo apt-get install libgeoip-dev libgirepository1.0-dev
+        sudo apt-get -y install libgeoip-dev libgirepository1.0-dev
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Lint with flake8
@@ -85,6 +85,18 @@ jobs:
         sudo apt-get -y install autopkgtest
         sudo autopkgtest ../source/nicotine_${NICOTINE_VERSION}_source.changes -- null
 
+  autopkgtest:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-latest]
+    needs: package
+    steps:
+      - name: Download sources to ${{ matrix.os }}
+        uses: actions/download-artifact@v1
+        with:
+          name: nicotine-debuild-artifacts
+
   test-install:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -92,7 +104,7 @@ jobs:
         os: [ubuntu-18.04, ubuntu-latest]
     needs: package    
     steps:
-    - name: Download.deb to ${{ matrix.os }}
+    - name: Download .deb to ${{ matrix.os }}
       uses: actions/download-artifact@v1
       with:
         name: nicotine.deb
