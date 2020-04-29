@@ -57,8 +57,6 @@ jobs:
     - name: Build binary .deb
       run: |
         dpkg-buildpackage -b -rfakeroot -us -uc
-        echo ../nicotine_${NICOTINE_VERSION}_all.deb
-        ls -l  ../nicotine_${NICOTINE_VERSION}_all.deb
     - name: Archive binary .deb artifacts
       uses: actions/upload-artifact@v1
       with:
@@ -84,10 +82,6 @@ jobs:
       with:
         name: nicotine-debuild-artifacts
         path: ../source
-    - name: Run autopkgtest on source .deb artifacts
-      run: |
-        sudo apt-get -y install autopkgtest
-        sudo autopkgtest ../source/nicotine_${NICOTINE_VERSION}_source.changes -- null
 
   autopkgtest:
     runs-on: ${{ matrix.os }}
@@ -100,6 +94,11 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: nicotine-debuild-artifacts
+      - name: Run autopkgtest on source .deb artifacts
+        run: |
+          ls -al .. . nicotine-debuild-artifacts
+          sudo apt-get -y install autopkgtest
+          sudo autopkgtest nicotine-debuild-artifacts/nicotine_${NICOTINE_VERSION}_source.changes -- null
 
   test-install:
     runs-on: ${{ matrix.os }}
