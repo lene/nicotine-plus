@@ -1,5 +1,6 @@
 import signal
 import sys
+from time import sleep
 
 from dogtail.procedural import *
 from dogtail.tc import TCNode, TCBool
@@ -26,6 +27,7 @@ def app_startup(executable, role_name="menu item"):
         focus.widget.node = focus.app.node.child(roleName=role_name)
         tcn.compare("app has a %s" % role_name, None, focus.widget.node)
     finally:
+        sleep(5)
         print('Killing PID', pid)
         os.kill(pid, signal.SIGTERM)
 
