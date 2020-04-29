@@ -14,3 +14,10 @@ Depends:
     python3-pytest
 Restrictions: isolation-container
 Features: test-name=test-unit
+
+Test-Command: python tests/integration/run_app nicotine
+Depends:
+    nicotine,
+    python3-atspi
+Restrictions: isolation-container
+Features: test-name=test-integration
