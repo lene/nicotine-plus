@@ -10,7 +10,7 @@ Build-Depends:
     python-gobject-2,
     gettext,
     lintian,
-    python-setuptools,
+    python3-setuptools,
     quilt,
     python3 (>=3.6),
     python3-pyatspi

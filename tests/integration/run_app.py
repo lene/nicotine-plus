@@ -2,6 +2,8 @@ import signal
 import sys
 from time import sleep
 
+print(sys.path)
+
 from dogtail.procedural import *
 from dogtail.tc import TCNode, TCBool
 

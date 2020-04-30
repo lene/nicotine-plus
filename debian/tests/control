@@ -15,9 +15,16 @@ Depends:
 Restrictions: isolation-container
 Features: test-name=test-unit
 
-Test-Command: python tests/integration/run_app nicotine
+Test-Command: tests/integration/run_test.sh
 Depends:
     nicotine,
-    python3-atspi
+    python3-pyatspi,
+    python3-cairo,
+    python3-gi,
+    python3-pip,
+    gir1.2-gtk-3.0,
+    python3-wheel,
+    python3-setuptools,
+    xvfb
 Restrictions: isolation-container
 Features: test-name=test-integration
