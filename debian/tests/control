@@ -18,6 +18,7 @@ Features: test-name=test-unit
 Test-Command: tests/integration/run_test.sh
 Depends:
     nicotine,
+    python3-dogtail,
     python3-pyatspi,
     python3-cairo,
     python3-gi,
