@@ -11,9 +11,14 @@ RUN apt-get -y install dpkg-dev quilt debhelper dh-python python-all lintian \
 # dependencies for building and testing nicotine
 RUN apt-get -y install python3-pyatspi python-gobject-2 python3-pytest python3-setuptools python3-dogtail
 # dependencies to get gsettings (needed by dogtail) to work
-RUN apt-get -y install libglib2.0-bin libgtk-3-0
+RUN apt-get -y install gsettings-desktop-schemas libglib2.0-bin  dconf-cli
 
+RUN sed -zi 's#toolkit-accessibility" type="b">\n      <default>false#toolkit-accessibility" type="b">\n      <default>true#' \
+        /usr/share/glib-2.0/schemas/org.gnome.desktop.interface.gschema.xml
+RUN grep -A 1 toolkit-accessibility /usr/share/glib-2.0/schemas/org.gnome.desktop.interface.gschema.xml
 RUN gsettings set org.gnome.desktop.interface toolkit-accessibility true
+RUN dconf update
+RUN gsettings get org.gnome.desktop.interface toolkit-accessibility
 
 WORKDIR /tmp/nicotine
 COPY . /tmp/nicotine
