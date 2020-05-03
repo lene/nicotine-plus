@@ -16,8 +16,8 @@ RUN apt-get -y install gsettings-desktop-schemas libglib2.0-bin  dconf-cli
 RUN sed -zi 's#toolkit-accessibility" type="b">\n      <default>false#toolkit-accessibility" type="b">\n      <default>true#' \
         /usr/share/glib-2.0/schemas/org.gnome.desktop.interface.gschema.xml
 RUN grep -A 1 toolkit-accessibility /usr/share/glib-2.0/schemas/org.gnome.desktop.interface.gschema.xml
-RUN gsettings set org.gnome.desktop.interface toolkit-accessibility true
-RUN dconf update
+#RUN gsettings set org.gnome.desktop.interface toolkit-accessibility true
+RUN glib-compile-schemas /usr/share/glib-2.0/schemas/
 RUN gsettings get org.gnome.desktop.interface toolkit-accessibility
 
 WORKDIR /tmp/nicotine
@@ -29,4 +29,7 @@ WORKDIR /tmp/nicotine
 
 RUN dpkg-buildpackage --build=source -us -uc
 
-#CMD bash
+RUN dbus-uuidgen > /var/lib/dbus/machine-id
+RUN mkdir -p /var/run/dbus
+RUN dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address &
+CMD su -
