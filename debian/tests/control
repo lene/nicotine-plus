@@ -5,7 +5,7 @@
 
 Test-Command: nicotine --version | grep Nicotine+
 Depends: @
-#Restrictions: isolation-container
+Restrictions: isolation-container
 Features: test-name=test-version
 
 Test-Command: pytest-3 tests/unit
@@ -13,7 +13,15 @@ Depends: @, python3-pytest
 Restrictions: isolation-container
 Features: test-name=test-unit
 
-Test-Command: xvfb-run -a python3 tests/integration/run_app.py
+Test-Command: dpkg -S at-spi-bus-launcher
+Depends: @, python3-dogtail, xvfb
+Restrictions: isolation-container
+Features: test-name=find-shit
+
+Test-Command: xvfb-run dbus-run-session sh -c '
+    /usr/libexec/at-spi-bus-launcher --launch-immediately &&
+    python tests/integration/run_app.py nicotine
+'
 Depends: @, python3-dogtail, xvfb
 Restrictions: isolation-container
 Features: test-name=test-integration

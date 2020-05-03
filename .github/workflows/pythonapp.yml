@@ -98,18 +98,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: nicotine-debuild-artifacts
-
-  autopkgtest:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-18.04, ubuntu-latest]
-    needs: package
-    steps:
-      - name: Download sources to ${{ matrix.os }}
-        uses: actions/download-artifact@v1
-        with:
-          name: nicotine-debuild-artifacts
       - name: Run autopkgtest on source .deb artifacts
         run: |
           ls -al .. . nicotine-debuild-artifacts
