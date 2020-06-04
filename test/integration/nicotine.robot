@@ -9,7 +9,11 @@ Library           nicotine_library.py
 
 *** Test Cases ***
 
-Run nicotine as shell command
-    Running nicotine starts a process    nicotine    3
-    Result should be    ${True}
+#Run nicotine as shell command
+#    Running nicotine starts a process    nicotine    3
+#    Result should be    ${True}
+
+Check nicotine exit code
+    Nicotine exit code ok bak    /usr/bin/nicotine    3
+    Result should be    143
 
